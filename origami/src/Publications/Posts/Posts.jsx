@@ -1,29 +1,15 @@
 import React from "react";
 import Post from "./Post/Post";
 import "./Posts.css";
-import postService from "../services/post-service";
-
-// const posts = [
-//   {
-//     id: 1,
-//     author: "Debeliq",
-//     content:
-//       "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-//   }
-// ];
-
-// const posts = postService.load;
+import postService from "../../services/post-service";
 
 class Posts extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      posts: null
-    };
-  }
+  state = {
+    posts: null
+  };
 
   componentDidMount() {
-    postService.load().then((posts) => {
+    postService.load(this.props.limit).then((posts) => {
       this.setState({ posts });
     });
   }

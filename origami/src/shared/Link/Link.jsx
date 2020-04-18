@@ -1,10 +1,11 @@
 import React from "react";
 import "./Link.css";
+import { Link as LinkReactDomRouter } from "react-router-dom";
 
-function Link({ linkNumber }) {
+function Link({ to, children }) {
   return (
     <li className="listItem">
-      <a href="/">Going to {linkNumber}</a>
+      <LinkReactDomRouter to={to}>{children}</LinkReactDomRouter>
     </li>
   );
 }

@@ -1,6 +1,8 @@
 const postService = {
-  load: function() {
-    return fetch("http://localhost:9999/api/origami").then((res) => res.json());
+  load: function(limit) {
+    return fetch(`http://localhost:9999/api/origami${limit ? `?limit=${limit}` : ""}`).then((res) =>
+      res.json()
+    );
   }
 };
 

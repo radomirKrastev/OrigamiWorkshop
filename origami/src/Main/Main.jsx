@@ -1,10 +1,11 @@
 import React from "react";
 import "./Main.css";
 
-function Main({ children }) {
+function Main({ children, title }) {
   return (
     <main className="Main">
-      <h1>{children}</h1>
+      <h1>{title}</h1>
+      {children}
     </main>
   );
 }
