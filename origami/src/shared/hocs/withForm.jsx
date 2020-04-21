@@ -4,7 +4,7 @@ export default function withForm(Cmp, initialState, schema) {
   return class extends React.Component {
     state = {
       form: initialState,
-      errors: null
+      errors: undefined
     };
 
     controlChangeHandlerFactory = (name) => {
@@ -21,6 +21,15 @@ export default function withForm(Cmp, initialState, schema) {
             return { form: { ...form, [name]: newValue } };
           });
 
+          this.runControlValidation(name)
+            .then(() => {
+              this.setState(({ errors: { [name]: undefined } = {} }) => ({
+                errors: undefined
+              }));
+            })
+            .catch((err) => {
+              this.setState(({ errors }) => ({ errors: { ...errors, [name]: err.errors } }));
+            });
           id = null;
         }, 300);
       };
@@ -35,16 +44,31 @@ export default function withForm(Cmp, initialState, schema) {
     };
 
     runValidations = () => {
-      return schema
-        .validate(this.state.form, { abortEarly: false })
-        .then(() => this.state.form)
-        .catch((err) => {
-          const errors = err.inner.reduce((res, { path, message }) => {
-            res[path] = (res[path] || []).concat(message);
-            return res;
-          }, {});
-          this.setState({ errors });
-        });
+      return (
+        (schema &&
+          schema
+            .validate(this.state.form, { abortEarly: false })
+            .then(() => {
+              this.setState({ errors: undefined });
+              return this.state.form;
+            })
+            .catch((err) => {
+              const errors = err.inner.reduce((res, { path, message }) => {
+                res[path] = (res[path] || []).concat(message);
+                return res;
+              }, {});
+              this.setState({ errors });
+            })) ||
+        Promise.resolve()
+      );
+    };
+
+    runControlValidation = (name) => {
+      const currentValue = this.state.form[name];
+      return (
+        (schema && schema.fields[name].validate(currentValue, { abortEarly: false })) ||
+        Promise.resolve()
+      );
     };
 
     render() {

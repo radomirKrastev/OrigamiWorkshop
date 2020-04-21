@@ -2,16 +2,15 @@ import React from "react";
 import "./Footer.css";
 import Link from "../shared/Link/Link.jsx";
 
-function Footer() {
+function Footer({ isLogged }) {
   return (
     <footer className="Footer">
       <ul>
-        {/* <LinkLogo logo={"white-origami-bird.png"} /> */}
-        <Link to={"/post"}>Post</Link>
-        <Link to={"/register"}>Register</Link>
-        <Link to={"/login"}>Login</Link>
-        <Link to={"/profile"}>Profile</Link>
-        <Link to={"/post"}>
+        {isLogged && <Link to="/create-posts">New Post</Link>}
+        {isLogged && <Link to="/profile">Profile</Link>}
+        {!isLogged && <Link to="/register">Register</Link>}
+        {!isLogged && <Link to="/login">Login</Link>}
+        <Link to={"/"}>
           <img id="logo" src={"blue-origami-bird-flipped.png"} alt="logo"></img>
         </Link>
       </ul>
