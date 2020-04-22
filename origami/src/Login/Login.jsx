@@ -4,6 +4,7 @@ import "./Login";
 import withForm from "../shared/hocs/withForm";
 
 class Login extends React.Component {
+  state = { error: null };
   usernameChangeHandler = this.props.controlChangeHandlerFactory("username");
   passwordChangeHandler = this.props.controlChangeHandlerFactory("password");
 
@@ -13,10 +14,13 @@ class Login extends React.Component {
       return;
     }
     const data = this.props.getFormState();
-    this.props.login(this.props.history, data);
+    this.props.login(this.props.history, data).catch((error) => {
+      this.setState({ error });
+    });
   };
 
   render() {
+    const { error } = this.state;
     return (
       <div className="Login">
         <h1>Login Page</h1>
@@ -29,6 +33,7 @@ class Login extends React.Component {
             <label>Password</label>
             <input type="password" onChange={this.passwordChangeHandler}></input>
           </div>
+          {error && <div>{error}</div>}
           <div className="form-control">
             <button type="button" onClick={this.submitHandler}>
               Login
